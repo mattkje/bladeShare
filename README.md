@@ -1,2 +1,4 @@
-# bladeShare
-Local host for sharing files.
+# Blade Share
+
+Very simple file sharing service made for Razer Blade laptops.
+
