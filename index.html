@@ -5,90 +5,35 @@
     <!--<script type='text/javascript' src='http://0.0.0.0:8080/scaledrone.js'></script>-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bebas+Neue">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" type="text/css" href="main.css">
-    <title>Matt's Public Web Server</title>
-    </head><body><h1>Matt's Public Web Server</h1>
+    <title>Blade Share</title>
+    </head>
+<body>
 
-
-<div class="hbox">
-    <div class="container">
-        <div class="hbox">
-            <div class="upload-container">
-            </div>
-            <button class="special-access-button" onclick="window.location.href='login.php'">Special Access</button>
+<div class="header">
+    <div class="content">
+        <a href="/" class="header-button">
+            <h4 class="logo-left">Blade</h4>
+            <h4>Share</h4>
+        </a>
+        <ul class="menu-links">
+            <li><a href="#" class="header-button">Files</a></li>
+            <li><a href="#" class="header-button">Upload</a></li>
+            <li><a href="#" class="header-button">QuickShare</a></li>
+            <li><a href="/about" class="header-button">Admin</a></li>
+        </ul>
+        <div class="right-content">
+            <a href="/login" class="fancy-button">Settings</a>
         </div>
-        <input type="text" id="search" placeholder="Search for files">
-        <ul class="file-list" id="file-list"><ul class="file-list"><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/2023-05_questions.pdf" download="">2023-05_questions.pdf</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Algorithms%20and%20Data%20Structures.zip" download="">Algorithms and Data Structures.zip</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Areyoufat.exe" download="">Areyoufat.exe</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Computer%20communication%20and%20network%20programming.zip" download="">Computer communication and network programming.zip</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Data%20communication%20and%20network%20programming.docx" download="">Data communication and network programming.docx</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/IDATA2303.pdf" download="">IDATA2303.pdf</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/IDATA2304.pdf" download="">IDATA2304.pdf</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Ian_Sommerville_-_Engineering_Software_Products__An_Introduction_to_Modern_Software_Engineering_2020_Pearson_-_libgen.li.pdf" download="">Ian_Sommerville_-_Engineering_Software_Products__An_Introduction_to_Modern_Software_Engineering_2020_Pearson_-_libgen.li.pdf</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Remote.jar" download="">Remote.jar</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/SmartTV.jar" download="">SmartTV.jar</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Statistics.zip" download="">Statistics.zip</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Titillium_Web.zip" download="">Titillium_Web.zip</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/Web%20and%20HTTP.docx" download="">Web and HTTP.docx</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/eksamennettverk.pdf" download="">eksamennettverk.pdf</a></li><li><a href="https://folk.ntnu.no/mattikj/Files/downloads/google_checks.xml" download="">google_checks.xml</a></li></ul></ul>
-    </div>
-    <div class="chatbox">
-        <form class="message-form" onsubmit="return false;">
-            <input class="message-form__input" placeholder="Type a message.." type="text">
-            <input class="message-form__button" value="Send" type="submit">
-        </form>'
-        <div class="members-count">1 users in room:</div>
-        <div class="members-list"><div class="member" style="color: rgb(251, 216, 136);">solitary_grass</div></div>
-        <div class="messages"></div>
-
-        <div class="filler"></div>
-        <script src="script.js"></script>
     </div>
 </div>
 
-
-<script>
-    document.getElementById('search').addEventListener('input', searchFiles);
-
-    function searchFiles() {
-        const searchTerm = document.getElementById('search').value.toLowerCase();
-        const fileList = document.getElementById('file-list');
-        const files = fileList.getElementsByTagName('li');
-
-        for (let i = 0; i < files.length; i++) {
-            const fileName = files[i].textContent.toLowerCase();
-            if (fileName.includes(searchTerm)) {
-                files[i].style.display = 'block';
-            } else {
-                files[i].style.display = 'none';
-            }
-        }
-    }
-
-    // Function to handle file upload
-    function uploadFile() {
-        const fileInput = document.getElementById('file-upload');
-        const file = fileInput.files[0];
-
-        if (file) {
-            const formData = new FormData();
-            formData.append('file', file);
-
-            fetch('upload.php', {
-                method: 'POST',
-                body: formData
-            })
-                .then(response => response.text())
-                .then(data => {
-                    // Handle the response after the file is uploaded
-                    console.log(data);
-
-                    // Reload the page after a successful upload
-                    if (data === 'File uploaded successfully.') {
-                        location.reload();
-                    }
-                })
-                .catch(error => console.error('Error uploading file:', error));
-        }
-    }
-
-    // Fetch and display the file list from the PHP script
-    fetch('downloads.php') // Update the URL to match your PHP script's location
-        .then(response => response.text())
-        .then(data => {
-            document.getElementById('file-list').innerHTML = data;
-        })
-        .catch(error => console.error('Error fetching file list:', error));
-</script>
-
-
-
-</body></html>
+</body>
+</html>
