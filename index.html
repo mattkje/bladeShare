@@ -1,13 +1,11 @@
 <!DOCTYPE html>
-<html><head>
+<html lang="en"><head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
     <script type="text/javascript" src="script.js"></script>
-    <!--<script type='text/javascript' src='http://0.0.0.0:8080/scaledrone.js'></script>-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap">
-
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bebas+Neue">
@@ -18,22 +16,52 @@
 <body>
 
 <div class="header">
-    <div class="content">
-        <a href="/" class="header-button">
-            <h4 class="logo-left">Blade</h4>
-            <h4>Share</h4>
-        </a>
-        <ul class="menu-links">
-            <li><a href="#" class="header-button">Files</a></li>
-            <li><a href="#" class="header-button">Upload</a></li>
-            <li><a href="#" class="header-button">QuickShare</a></li>
-            <li><a href="/about" class="header-button">Admin</a></li>
-        </ul>
-        <div class="right-content">
-            <a href="/login" class="fancy-button">Settings</a>
-        </div>
+
+    <div class="tab">
+        <h1>Bladeshare</h1>
+        <button id="defaultTab" class="tablinks" onclick="openCity(event, 'Files')">Files</button>
+        <button class="tablinks" onclick="openCity(event, 'Upload')">Upload</button>
+        <button class="tablinks" onclick="openCity(event, 'QuickShare')">QuickShare</button>
+        <button class="tablinks" onclick="openCity(event, 'Admin')">Admin</button>
     </div>
 </div>
+
+<div id="Files" class="tabcontent">
+    <h3>Files</h3>
+    <p>List of files on server</p>
+
+    <h2>File Download</h2>
+    <input type="text" id="fileName" placeholder="Enter file name" />
+    <button onclick="downloadFile(document.getElementById('fileName').value)">Download File</button>
+
+    <h2>Files</h2>
+    <div id="fileList"></div>
+
+</div>
+
+<div id="Upload" class="tabcontent">
+    <h3>Upload</h3>
+    <p>Upload a file to the server</p>
+    <h2>File Upload</h2>
+    <input type="file" id="fileInput" />
+    <button onclick="uploadFile(document.getElementById('fileInput').value)">Upload File</button>
+
+    <h2>Feature still in development...</h2>
+</div>
+
+<div id="QuickShare" class="tabcontent">
+    <h3>QuickShare</h3>
+    <p>Quickly share files through the server. No data will be stored on the server</p>
+
+    <h2>Feature still in development...</h2>
+</div>
+
+<div id="Admin" class="tabcontent">
+    <h3>Admin</h3>
+    <p>Management page</p>
+    <h2>Feature still in development...</h2>
+</div>
+
 
 </body>
 </html>

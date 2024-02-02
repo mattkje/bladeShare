@@ -1,133 +1,93 @@
-// PS! Replace this with your own channel ID
-// If you use this channel ID your app will stop working in the future
-const CLIENT_ID = '4cNswoNqM2wVFHPg';
+function openCity(evt, cityName) {
+  // Declare all variables
+  var i, tabcontent, tablinks;
 
-
-userName = getRandomName();
-const drone = new ScaleDrone(CLIENT_ID, {
-  data: { // Will be sent out as clientData via events
-    name: userName, // Use the user-provided or random name
-    color: getRandomColor(),
-  },
-});
-
-let members = [];
-
-drone.on('open', error => {
-  if (error) {
-    return console.error(error);
+  // Get all elements with class="tabcontent" and hide them
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
   }
-  console.log('Successfully connected to Scaledrone');
 
-  const room = drone.subscribe('observable-room');
-  room.on('open', error => {
-    if (error) {
-      return console.error(error);
-    }
-    console.log('Successfully joined room');
-  });
-
-  room.on('members', m => {
-    members = m;
-    updateMembersDOM();
-  });
-
-  room.on('member_join', member => {
-    members.push(member);
-    updateMembersDOM();
-  });
-
-  room.on('member_leave', ({ id }) => {
-    const index = members.findIndex(member => member.id === id);
-    members.splice(index, 1);
-    updateMembersDOM();
-  });
-
-  room.on('data', (text, member) => {
-    if (member) {
-      addMessageToListDOM(text, member);
-    } else {
-      // Message is from the server
-    }
-  });
-});
-
-drone.on('close', event => {
-  console.log('Connection was closed', event);
-});
-
-drone.on('error', error => {
-  console.error(error);
-});
-
-function getRandomName() {
-  const adjs = ["autumn", "hidden", "bitter", "misty", "silent", "empty", "dry", "dark", "summer", "icy", "delicate", "quiet", "white", "cool", "spring", "winter", "patient", "twilight", "dawn", "crimson", "wispy", "weathered", "blue", "billowing", "broken", "cold", "damp", "falling", "frosty", "green", "long", "late", "lingering", "bold", "little", "morning", "muddy", "old", "red", "rough", "still", "small", "sparkling", "throbbing", "shy", "wandering", "withered", "wild", "black", "young", "holy", "solitary", "fragrant", "aged", "snowy", "proud", "floral", "restless", "divine", "polished", "ancient", "purple", "lively", "nameless"];
-  const nouns = ["waterfall", "river", "breeze", "moon", "rain", "wind", "sea", "morning", "snow", "lake", "sunset", "pine", "shadow", "leaf", "dawn", "glitter", "forest", "hill", "cloud", "meadow", "sun", "glade", "bird", "brook", "butterfly", "bush", "dew", "dust", "field", "fire", "flower", "firefly", "feather", "grass", "haze", "mountain", "night", "pond", "darkness", "snowflake", "silence", "sound", "sky", "shape", "surf", "thunder", "violet", "water", "wildflower", "wave", "water", "resonance", "sun", "wood", "dream", "cherry", "tree", "fog", "frost", "voice", "paper", "frog", "smoke", "star"];
-  return (
-    adjs[Math.floor(Math.random() * adjs.length)] +
-    "_" +
-    nouns[Math.floor(Math.random() * nouns.length)]
-  );
-}
-
-function getRandomColor() {
-  return '#' + Math.floor(Math.random() * 0xFFFFFF).toString(16);
-}
-
-//------------- DOM STUFF
-
-const DOM = {
-  membersCount: document.querySelector('.members-count'),
-  membersList: document.querySelector('.members-list'),
-  messages: document.querySelector('.messages'),
-  input: document.querySelector('.message-form__input'),
-  form: document.querySelector('.message-form'),
-};
-
-DOM.form.addEventListener('submit', sendMessage);
-
-function sendMessage() {
-  const value = DOM.input.value;
-  if (value === '') {
-    return;
+  // Get all elements with class="tablinks" and remove the class "active"
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
   }
-  DOM.input.value = '';
-  drone.publish({
-    room: 'observable-room',
-    message: value,
-  });
+
+  // Show the current tab, and add an "active" class to the button that opened the tab
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
 }
 
-function createMemberElement(member) {
-  const { name, color } = member.clientData;
-  const el = document.createElement('div');
-  el.appendChild(document.createTextNode(name));
-  el.className = 'member';
-  el.style.color = color;
-  return el;
+document.addEventListener("DOMContentLoaded", function() {
+  listFiles();
+  document.getElementById("defaultTab").click();
+});
+
+function listFiles() {
+  const apiUrlList = 'listFiles.php';
+
+  fetch(apiUrlList)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch file list');
+        }
+        return response.text();
+      })
+      .then(data => {
+        document.getElementById('fileList').innerHTML = data;
+      })
+      .catch(error => {
+        console.error('Error fetching file list:', error.message);
+      });
 }
 
-function updateMembersDOM() {
-  DOM.membersCount.innerText = `${members.length} users in room:`;
-  DOM.membersList.innerHTML = '';
-  members.forEach(member =>
-    DOM.membersList.appendChild(createMemberElement(member))
-  );
+
+function uploadFile(fileInput) {
+  const apiUrl = '/files/public/'; // replace with your server's API endpoint
+
+  const formData = new FormData();
+  formData.append('file', fileInput);
+
+  fetch(apiUrl, {
+    method: 'POST',
+    body: formData,
+  })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('File upload failed');
+        }
+        console.log('File uploaded successfully');
+      })
+      .catch(error => {
+        console.error('Error uploading file:', error.message);
+      });
 }
 
-function createMessageElement(text, member) {
-  const el = document.createElement('div');
-  el.appendChild(createMemberElement(member));
-  el.appendChild(document.createTextNode(text));
-  el.className = 'message';
-  return el;
+function downloadFile(fileName) {
+  const apiUrl = `/files/public/${fileName}`; // replace with your server's API endpoint
+
+  fetch(apiUrl)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('File download failed');
+        }
+        return response.blob();
+      })
+      .then(blob => {
+        // Create a link element and trigger a download
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch(error => {
+        console.error('Error downloading file:', error.message);
+      });
 }
 
-function addMessageToListDOM(text, member) {
-  const el = DOM.messages;
-  const wasTop = el.scrollTop === el.scrollHeight - el.clientHeight;
-  el.appendChild(createMessageElement(text, member));
-  if (wasTop) {
-    el.scrollTop = el.scrollHeight - el.clientHeight;
-  }
-}
+
+
+
