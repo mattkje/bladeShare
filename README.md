@@ -1,4 +1,5 @@
 # Blade Share
 
-Very simple file sharing service made for Razer Blade laptops.
+Blade Share is a straightforward file-sharing service tailored for Razer Blade laptops.
 
+Status: Currently not operational.
